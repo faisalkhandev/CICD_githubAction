@@ -2,7 +2,7 @@ name: Deploy Vite React App
 
 on:
   push:
-    branches: [master] # run only when pushing to main
+    branches: [main]
 
 jobs:
   build-deploy:
@@ -18,14 +18,16 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        # if your repo has a lockfile, prefer: npm ci
 
       - name: Build project
         run: npm run build
 
       - name: Prepare site folder
         run: |
-          mv dist _site
-          cp dist/index.html _site/404.html
+          mkdir _site
+          cp -r dist/* _site/
+          cp _site/index.html _site/404.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
