@@ -2,7 +2,7 @@ name: Deploy Vite React App
 
 on:
   push:
-    branches: [main] # run only when pushing to main
+    branches: [master] # run only when pushing to main
 
 jobs:
   build-deploy:
