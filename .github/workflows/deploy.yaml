@@ -17,15 +17,15 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
-        # if your repo has a lockfile, prefer: npm ci
+        run: npm ci
+        # if no lockfile, use: npm install
 
       - name: Build project
         run: npm run build
 
       - name: Prepare site folder
         run: |
-          mkdir _site
+          mkdir -p _site
           cp -r dist/* _site/
           cp _site/index.html _site/404.html
 
