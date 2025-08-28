@@ -1,4 +1,4 @@
-name: Deploy Vite to GitHub Pages (Official)
+name: Deploy Vite to GitHub Pages
 
 on:
   push:
@@ -26,16 +26,21 @@ jobs:
           node-version: 20
 
       - name: Install
-        run: npm install
+        run: npm ci || npm install
 
-      - name: Build
-        run: npm run build
-
-      - name: Prepare artifact
+      # Build directly into _site so we deploy exactly what Vite outputs
+      - name: Build (into _site)
         run: |
-          mkdir -p _site
-          cp -r dist/* _site/
+          npx vite build --base=/CICD_githubAction/ --outDir=_site
           cp _site/index.html _site/404.html
+
+      # sanity check so we can see what's being deployed in the logs
+      - name: Inspect artifact
+        run: |
+          echo "---- _site tree ----"; ls -lah _site
+          echo "---- _site/assets ----"; ls -lah _site/assets || true
+          echo "---- first 50 lines of _site/index.html ----"
+          sed -n '1,50p' _site/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
